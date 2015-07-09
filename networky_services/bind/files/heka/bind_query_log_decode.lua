@@ -212,6 +212,7 @@ local bind_query = timestamp * space * queries_literal * space * info_literal * 
 --grammar = l.Ct(bind_query)
 
 local msg = {
+  --This value is read in from the 'msg_type' config option in the TOML:
   Type        = msg_type,
   Payload     = nil,
   Severity    = 'info',
