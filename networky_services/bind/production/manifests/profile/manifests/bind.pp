@@ -267,6 +267,27 @@ class profile::bind::master {
     },
   }
 
+  #Heka Elasticsearch encoding and output:
+  #The encoder:
+  ::heka::plugin { 'elasticsearch_logstash_v0_encoder':
+    type => 'ESLogstashV0Encoder',
+    settings => {
+      'es_index_from_timestamp' => 'true',
+      'type_name' => '"%{Type}"',
+    }
+  }
+  #The output which uses the encoder:
+  ::heka::plugin { 'elasticsearch_output_1':
+    type => 'ElasticSearchOutput',
+    settings => {
+      'message_matcher' => "\"Type == 'bind_query'\"",
+      'server' => '"http://dnsmonitoring.local:9200"',
+      'flush_interval' => '5000',
+      'flush_count' => '10',
+      'encoder' => '"elasticsearch_logstash_v0_encoder"',
+    }
+  }
+
   #Add an RstEncoder and LogOutput so that we can see the BIND query logs get sent to
   #Heka's standard output to make sure things are working. Adapted from:
   #https://hekad.readthedocs.org/en/latest/getting_started.html#simplest-heka-config
