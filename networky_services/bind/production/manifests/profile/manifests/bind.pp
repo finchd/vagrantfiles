@@ -262,7 +262,7 @@ class profile::bind::master {
       'config' => {
       #Sample query log line:
       #27-May-2015 21:06:49.246 queries: info: client 127.0.0.1#33182 (webserver.company.com): query: webserver.company.com IN A +E (127.0.0.1)
-        'type' => '"bind.query"',
+        'type' => '"bind_query"',
       },
     },
   }
