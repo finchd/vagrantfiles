@@ -5,7 +5,7 @@ class profile::elasticsearch {
     #hieravaluereplace
     package_url => 'https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb',
     config => { 'cluster.name'             => 'logstash',
-                'network.host'             => $ipaddress_eth1,
+                'network.host'             => '0.0.0.0',
                 'index.number_of_replicas' => '1',
                 'index.number_of_shards'   => '4',
                 'http.cors.enabled'        => 'true',
