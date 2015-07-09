@@ -102,7 +102,7 @@ local c_literal = l.P"C"
 -- 27-May-2015 21:06:49.246
 -- The milliseconds (the .246) are discarded by the `l.P"." * l.P(3)` at the end:
 --Source: https://github.com/mozilla-services/lua_sandbox/blob/dev/modules/date_time.lua
-local timestamp = l.Cg(date_time.build_strftime_grammar("%d-%B-%Y %H:%M:%S") / date_time.time_to_ns, "Timestamp") * l.P"." * l.P(3)
+local timestamp = l.Cg(date_time.build_strftime_grammar("%d-%b-%Y %H:%M:%S") / date_time.time_to_ns, "Timestamp") * l.P"." * l.P(3)
 local x4            = l.xdigit * l.xdigit * l.xdigit * l.xdigit
 
 --The below pattern matches IPv4 addresses from BIND query logs like the following:
@@ -216,6 +216,7 @@ local msg = {
   Payload     = nil,
   Severity    = 'info',
   Fields      = {},
+}
 
 function process_message ()
 
