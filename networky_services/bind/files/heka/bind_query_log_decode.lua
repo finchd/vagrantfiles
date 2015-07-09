@@ -222,10 +222,10 @@ function process_message ()
 
   local query_log_line = read_message("Payload")
 
-
   local grammar = l.Ct(bind_query)
   fields = grammar:match(query_log_line)
 
+  --If fields is empty, exit immediately:
   if not fields then return -1 end
   --Set the time in the message we're generating and set it to nil in the original log line:
   msg.Timestamp = fields.time
