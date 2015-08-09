@@ -33,7 +33,7 @@ node 'dnspuppetmaster.local' {
 
 }
 
-node 'dnsmaster1.local' {
+node 'dnsserver1.local' {
 
   ###############################
   # SSH installation/setup
@@ -47,54 +47,54 @@ node 'dnsmaster1.local' {
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
   ###############################
 
   #Include a profile that sets up NTP
-  include profile::ntp::client
+  #include profile::ntp::client
 
   ###############################
   # Heka installation/setup
   ###############################
 
   #Install Heka and configure it with some plugins:
-  include profile::heka
+  #include profile::heka
 
   ###############################
   # Consul installation/setup
   ###############################
 
   #Make this machine a Consul client:
-  include profile::consul::client
+  #include profile::consul::client
 
   ###############################
   # collectd installation/setup
   ###############################
 
   #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
+  #include profile::collectd
   
   #Gather NTP stats:
-  include profile::collectd::system_metrics
+  #include profile::collectd::system_metrics
   
   #Gather network metrics
-  include profile::collectd::network_metrics
+  #include profile::collectd::network_metrics
   
   #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
+  #include profile::collectd::write_graphite
 
   ###############################
   # NRPE installation/configuration
   ###############################
 
   #Install and configure NRPE
-  include profile::icinga2::nrpe
+  #include profile::icinga2::nrpe
   
   #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
+  #include profile::icinga2::nrpe::objects
 
   ###############################
   # BIND installation/setup
@@ -102,8 +102,8 @@ node 'dnsmaster1.local' {
   
   #Include the BIND base profile so that we get the host export
   #for monitoring set up:
-  include profile::bind  
-  include profile::bind::master
+  #include profile::bind  
+  #include profile::bind::master
 
 }
 
