@@ -1,13 +1,22 @@
 #! /bin/bash
+
+#EL7 Puppet agent installation
+
+#Sources: 
+# https://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html#yum-based-systems
+# https://docs.puppetlabs.com/puppet/4.2/reference/config_file_main.html
+# http://docs.puppetlabs.com/hiera/3.0/configuring.html
+# https://docs.puppetlabs.com/puppet/latest/reference/config_file_fileserver.html
+
 echo "Checking to see if the Puppet Labs RHEL/CentOS repo needs to be added..."
 if [ ! -f /home/vagrant/repos_added.txt ];
 then    
-	sudo rpm -ivh http://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-7.noarch.rpm
-	sudo yum check-update
-	#Touch the repos_added file to skip this block the next time around
-	touch /home/vagrant/repos_added.txt
+sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+sudo yum check-update
+#Touch the repos_added file to skip this block the next time around
+touch /home/vagrant/repos_added.txt
 else
-	echo "Skipping repo addition..."
+echo "Skipping repo addition..."
 fi
 
 echo "Checking to see if the Puppet agent package needs to be installed..."
