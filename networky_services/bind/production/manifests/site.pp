@@ -1,17 +1,17 @@
 #puppet master node definition
-node 'dnspuppetmaster.local' {
+node 'dnspuppetserver.local' {
 
   #Apache modules for PuppetBoard:
   include profile::apache::wsgi
   
   #Profiles for Puppetboard itself and its vhost:
-  include profile::puppetboard
+  #include profile::puppetboard
   
   #Profile for setting up puppetexplorer:
-  include profile::puppetexplorer
+  #include profile::puppetexplorer
  
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   #Include a profile that sets up our usual SSH settings:
   include profile::ssh
@@ -26,10 +26,10 @@ node 'dnspuppetmaster.local' {
   include profile::hiera
 
   #Make this machine a Consul server:
-  include profile::consul::server
+  #include profile::consul::server
 
   #Install Heka and configure it with some plugins:
-  include profile::heka
+  #include profile::heka
 
 }
 
@@ -54,14 +54,14 @@ node 'dnsserver1.local' {
   ###############################
 
   #Include a profile that sets up NTP
-  #include profile::ntp::client
+  include profile::ntp::client
 
   ###############################
   # Heka installation/setup
   ###############################
 
   #Install Heka and configure it with some plugins:
-  #include profile::heka
+  include profile::heka
 
   ###############################
   # Consul installation/setup
