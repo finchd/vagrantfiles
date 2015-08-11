@@ -23,7 +23,8 @@ echo "Checking to see if the Puppet agent package needs to be installed..."
 if [ ! -f /home/vagrant/puppet_agent_installed.txt ];
 then
 sudo yum -y install puppet-agent
-sudo cat > /etc/puppet/puppet.conf <<"EOF"
+
+sudo cat > /etc/puppetlabs/puppet/puppet.conf <<"EOF"
 # This file can be used to override the default puppet settings.
 # See the following links for more details on what settings are available:
 # - https://docs.puppetlabs.com/puppet/latest/reference/config_important_settings.html
