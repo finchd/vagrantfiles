@@ -2,6 +2,7 @@ class profile::puppetdb {
 
  #This module is from: https://github.com/puppetlabs/puppetlabs-puppetdb/
   class { '::puppetdb':
+    manage_firewall => false,
     listen_address => '0.0.0.0'
   }
 
