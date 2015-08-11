@@ -3,7 +3,7 @@
 class profile::hiera {
 
   class { '::hiera':
-    datadir        => '/etc/puppet/hieradata/yaml',
+    datadir        => '/etc/puppetlabs/code/environments/%{::environment}/hieradata/yaml',
     datadir_manage => false,
     hierarchy      => [
       'node/%{fqdn}',
