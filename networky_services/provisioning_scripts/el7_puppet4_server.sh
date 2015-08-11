@@ -44,6 +44,79 @@ codedir = /etc/puppetlabs/code
 dns_alt_names = puppet
 EOF
 
+sudo cat > /etc/puppetlabs/puppet/auth.conf <<"EOF"
+path /puppet/v3/environments
+method find
+allow *
+
+# allow nodes to retrieve their own catalog
+path ~ ^/puppet/v3/catalog/([^/]+)$
+method find
+allow $1
+
+# allow nodes to retrieve their own node definition
+path ~ ^/puppet/v3/node/([^/]+)$
+method find
+allow $1
+
+# allow all nodes to store their own reports
+path ~ ^/puppet/v3/report/([^/]+)$
+method save
+allow $1
+
+# control access to the custom user_files mount point
+path ~ ^/puppet/v3/file_(metadata|content)s?/user_files/
+auth yes
+allow *.example.com
+allow_ip 192.168.100.0/24
+
+# Allow all nodes to access all file services.
+path /puppet/v3/file
+allow *
+
+path /puppet/v3/status
+method find
+allow *
+
+# allow all nodes to access the certificates services
+path /puppet-ca/v1/certificate_revocation_list/ca
+method find
+allow *
+
+### Unauthenticated ACLs, for clients without valid certificates; authenticated
+### clients can also access these paths, though they rarely need to.
+
+# allow access to the CA certificate; unauthenticated nodes need this
+# in order to validate the puppet master's certificate
+path /puppet-ca/v1/certificate/ca
+auth any
+method find
+allow *
+
+# allow nodes to retrieve the certificate they requested earlier
+path /puppet-ca/v1/certificate/
+auth any
+method find
+allow *
+
+# allow nodes to request a new certificate
+path /puppet-ca/v1/certificate_request
+auth any
+method find, save
+allow *
+
+# deny everything else; this ACL is not strictly necessary, but
+# illustrates the default policy.
+path /
+auth any
+EOF
+
+sudo cat > /etc/puppetlabs/puppet/fileserver.conf <<"EOF"
+[files]
+  path /etc/puppetlabs/code/environments/production/files
+  allow *
+EOF
+
 sudo cat > /etc/puppetlabs/code/hiera.yaml <<"EOF"
 ---
 #Our hierarcy
@@ -60,14 +133,21 @@ sudo cat > /etc/puppetlabs/code/hiera.yaml <<"EOF"
 :datadir: '/etc/puppetlabs/code/environments/%{environment}/hieradata'
 EOF
 
-sudo /opt/puppetlabs/puppet/bin/puppet cert clean --all
-sudo /opt/puppetlabs/puppet/bin/puppet cert generate master --dns_alt_names=puppet,master,puppetmaster,puppet.local,master.local,puppetmaster.local
+#Enable autosigning:
+sudo cat > /etc/puppetlabs/puppet/autosign.conf <<"EOF"
+*.local
+EOF
+
+sudo /opt/puppetlabs/puppet/bin/puppet cert clean 
+sudo /opt/puppetlabs/puppet/bin/puppet cert generate `hostname --fqdn` --dns_alt_names=puppet,master,puppetmaster,puppet.local,master.local,puppetmaster.local
 
 touch /home/vagrant/puppet_master_installed.txt
 fi
 
 if [ ! -f /home/vagrant/puppet_master_initial_run_complete.txt ];
 then
+  #Let Puppet Server start up first before we try a Puppet run:
+  sleep 30;
   #Do an initial Puppet run to set up PuppetDB:
   /opt/puppetlabs/puppet/bin/puppet agent -t
   #Enable PuppetDB report storage...
