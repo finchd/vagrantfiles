@@ -13,6 +13,9 @@ class profile::heka {
       'poolsize' => 100,
       'hostname' => "\"${::fqdn}\"",
     },
+    systemd_unit_file_settings => {
+      'RestartSec' => '30',
+    },
   }
 
   ###############################
