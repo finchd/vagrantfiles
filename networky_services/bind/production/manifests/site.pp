@@ -5,7 +5,7 @@ node 'dnspuppetserver.local' {
   include profile::apache::wsgi
   
   #Profiles for Puppetboard itself and its vhost:
-  #include profile::puppetboard
+  include profile::puppetboard
   
   #Profile for setting up puppetexplorer:
   include profile::puppetexplorer
@@ -29,7 +29,7 @@ node 'dnspuppetserver.local' {
   #include profile::consul::server
 
   #Install Heka and configure it with some plugins:
-  #include profile::heka
+  include profile::heka
 
 }
 
@@ -102,8 +102,8 @@ node 'dnsserver1.local' {
   
   #Include the BIND base profile so that we get the host export
   #for monitoring set up:
-  #include profile::bind  
-  #include profile::bind::master
+  include profile::bind  
+  include profile::bind::master
 
 }
 

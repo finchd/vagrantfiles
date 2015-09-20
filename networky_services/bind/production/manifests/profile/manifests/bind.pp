@@ -306,4 +306,13 @@ class profile::bind::master {
       'encoder' => '"bind_query_log_rst_encoder"'
     },
   }
+
+  file { '/usr/share/heka/lua_decoders/bind_query_log_decoder.lua':
+    ensure => file,
+    owner => 'root',
+    group => 'root',
+    mode =>  '755',
+    source => 'puppet:///files/heka/bind_query_log_decode.lua',
+  }
+
 }
