@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
     chefserver1_config.vm.box = "centos-7.1-amd64-vmware"
     chefserver1_config.vm.network :private_network, ip: "10.0.2.10"
     chefserver1_config.vm.hostname = "chefserver1.local"
-    chefserver1_config.hostmanager.aliases = %w(chef chefserver1.local)
+    chefserver1_config.hostmanager.aliases = %w(chefserver1 chefserver1.local)
     #set some machine-specific options
     chefserver1_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
     chefserver2_config.vm.box = "centos-7.1-amd64-vmware"
     chefserver2_config.vm.network :private_network, ip: "10.0.2.20"
     chefserver2_config.vm.hostname = "chefserver2.local"
-    chefserver2_config.hostmanager.aliases = %w(chef chefserver2.local)
+    chefserver2_config.hostmanager.aliases = %w(chefserver2 chefserver2.local)
     #set some machine-specific options
     chefserver2_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
@@ -74,7 +74,7 @@ Vagrant.configure("2") do |config|
     chefclient1_config.vm.box = "centos-7.1-amd64-vmware"
     chefclient1_config.vm.network :private_network, ip: "10.0.2.11"
     chefclient1_config.vm.hostname = "chefclient1.local"
-    chefclient1_config.hostmanager.aliases = "chefclient1.local"
+    chefclient1_config.hostmanager.aliases = %w(chefclient1 chefclient1.local)
     #set some machine-specific options
     chefclient1_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
@@ -95,7 +95,7 @@ Vagrant.configure("2") do |config|
     chefclient2_config.vm.box = "centos-7.1-amd64-vmware"
     chefclient2_config.vm.network :private_network, ip: "10.0.2.12"
     chefclient2_config.vm.hostname = "chefclient2.local"
-    chefclient2_config.hostmanager.aliases = "chefclient2.local"
+    chefclient2_config.hostmanager.aliases = %w(chefclient2 chefclient2.local)
     #set some machine-specific options
     chefclient2_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
@@ -116,7 +116,7 @@ Vagrant.configure("2") do |config|
     chefclient3_config.vm.box = "centos-6.6-amd64-vmware"
     chefclient3_config.vm.network :private_network, ip: "10.0.2.13"
     chefclient3_config.vm.hostname = "chefclient3.local"
-    chefclient3_config.hostmanager.aliases = "chefclient3.local"
+    chefclient3_config.hostmanager.aliases = %w(chefclient3 chefclient3.local)
     #set some machine-specific options
     chefclient3_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
