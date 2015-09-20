@@ -39,7 +39,7 @@ class profile::bind::master {
     acls => {
       'rfc1918' => [ '10/8', '172.16/12', '192.168/16' ],
       'local'   => [ '127.0.0.1' ],
-      '10net'   => [ '10.0.0.0/24', '10.0.1.0/24', '10.1.1.0/24', '10.1.0.0/24'],
+      '10net'   => [ '10.0.0.0/24', '10.0.1.0/24', '10.0.2.0/24', '10.1.1.0/24', '10.1.0.0/24',],
     },
     #Where BIND will keep its data:
     directory => '/var/named/',
@@ -306,5 +306,4 @@ class profile::bind::master {
       'encoder' => '"bind_query_log_rst_encoder"'
     },
   }
-
 }
