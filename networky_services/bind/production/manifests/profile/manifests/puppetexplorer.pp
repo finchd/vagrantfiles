@@ -72,10 +72,10 @@ class profile::puppetexplorer {
     docroot  => '/usr/share/puppetexplorer/',
     port => 80,
     priority => 30,
-    proxy_pass => { 
-      'path' => '/api/pdb',
-      'url' => 'http://127.0.0.1:8080/pdb',
-    },
+    proxy_pass => [
+      { 'path' => '/api/pdb/query', 'url' => 'http://localhost:8080/pdb/query' },
+      { 'path' => '/api/pdb/meta', 'url' => 'http://localhost:8080/pdb/meta' },
+      { 'path' => '/api/metrics', 'url' => 'http://localhost:8080/metrics' }
+    ],
   }
-
 }
