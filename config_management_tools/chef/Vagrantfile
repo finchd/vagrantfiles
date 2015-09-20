@@ -2,81 +2,134 @@ Vagrant.configure("2") do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
-
+  
   ####################
   # Snippets to use
   ####################
-
+  
   #NFS folder sharing
   #config.vm.synced_folder "modules", "/etc/puppet/modules", :nfs => true
   
   ####################
   ####################
-
+  
   #vagrant-hostmanager plugin options
   config.hostmanager.enabled = true
   config.hostmanager.ignore_private_ip = false
   #update the /etc/hosts of the host OS
   config.hostmanager.manage_host = true
-  #incorporate offline box's IPs into the /etc/hosts of boxes that are up/being brought up
-  config.hostmanager.include_offline = true
-
-  #A chef server
-  config.vm.define "chefserver".to_sym do |chefserver_config|
-    chefserver_config.vm.box = "ubuntu-14.04-server-amd64"
-    chefserver_config.vm.hostname = "chefserver.local"
-    chefserver_config.hostmanager.enabled = true
-    #giving it 'puppet' as an alias so that the agents can connect to it with their default settings
-    chefserver_config.hostmanager.aliases = %w(chefserver chef chef.local)
-    chefserver_config.vm.network :private_network, ip: "10.0.1.190"
-    #set some machine-specific options	
-    chefserver_config.vm.provider "virtualbox" do |v|
+  
+  #A Chef server
+  config.vm.define "chefserver1".to_sym do |chefserver1_config|
+    chefserver1_config.vm.box = "centos-7.1-amd64-vmware"
+    chefserver1_config.vm.network :private_network, ip: "10.0.2.10"
+    chefserver1_config.vm.hostname = "chefserver1.local"
+    chefserver1_config.hostmanager.aliases = %w(chef chefserver1.local)
+    #set some machine-specific options
+    chefserver1_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
       v.customize ["modifyvm", :id, "--memory", "1024"]
+      v.vm.network :private_network, ip: "10.0.1.10"
     end
-    chefserver_config.vm.provision :shell, :path => "../provisioning_scripts/ubuntu_puppet_master.sh"
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #chefserver1_config.vm.synced_folder "production/", "/etc/puppetlabs/code/environments/production", :nfs => true
+    #chefserver1_config.vm.synced_folder "/Users/nick/Documents/git/puppet-code/modules", "/etc/puppetlabs/code/environments/production/modules", :nfs => true
+    #chefserver1_config.vm.synced_folder "hieradata/", "/etc/puppetlabs/code/environments/production/hieradata", :nfs => true
+    #chefserver1_config.vm.synced_folder "files/", "/etc/puppet/files", :nfs => true
+    #Puppet master provisioning script
+    #chefserver1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_server.sh"
   end
 
-  #A Chef client node
+  #A Chef server
+  config.vm.define "chefserver2".to_sym do |chefserver2_config|
+    chefserver2_config.vm.box = "centos-7.1-amd64-vmware"
+    chefserver2_config.vm.network :private_network, ip: "10.0.2.20"
+    chefserver2_config.vm.hostname = "chefserver2.local"
+    chefserver2_config.hostmanager.aliases = %w(chef chefserver2.local)
+    #set some machine-specific options
+    chefserver2_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "1024"]
+      v.vm.network :private_network, ip: "10.0.1.20"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #chefserver2_config.vm.synced_folder "production/", "/etc/puppetlabs/code/environments/production", :nfs => true
+    #chefserver2_config.vm.synced_folder "/Users/nick/Documents/git/puppet-code/modules", "/etc/puppetlabs/code/environments/production/modules", :nfs => true
+    #chefserver2_config.vm.synced_folder "hieradata/", "/etc/puppetlabs/code/environments/production/hieradata", :nfs => true
+    #chefserver2_config.vm.synced_folder "files/", "/etc/puppet/files", :nfs => true
+    #Puppet master provisioning script
+    #chefserver2_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_server.sh"
+  end
+
+  #A CentOS 7 Chef client machine:
   config.vm.define "chefclient1".to_sym do |chefclient1_config|
-    chefclient1_config.vm.box = "ubuntu-14.04-server-amd64"
+    chefclient1_config.vm.box = "centos-7.1-amd64-vmware"
+    chefclient1_config.vm.network :private_network, ip: "10.0.2.11"
     chefclient1_config.vm.hostname = "chefclient1.local"
-    chefclient1_config.hostmanager.enabled = true
-    chefclient1_config.vm.network :private_network, ip: "10.0.1.191"
-    #set some machine-specific options	
+    chefclient1_config.hostmanager.aliases = "chefclient1.local"
+    #set some machine-specific options
     chefclient1_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
-      v.customize ["modifyvm", :id, "--memory", "512"]
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
     end
-    chefclient1_config.vm.provision :shell, :path => "../provisioning_scripts/ubuntu_puppet_agent.sh"
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #chefclient1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    #chefclient1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
   end
-  
-  #A Chef client node
+
+  #A CentOS 7 Chef client machine:
   config.vm.define "chefclient2".to_sym do |chefclient2_config|
-    chefclient2_config.vm.box = "centos-6.6-amd64"
+    chefclient2_config.vm.box = "centos-7.1-amd64-vmware"
+    chefclient2_config.vm.network :private_network, ip: "10.0.2.12"
     chefclient2_config.vm.hostname = "chefclient2.local"
-    chefclient2_config.hostmanager.enabled = true
-    chefclient2_config.vm.network :private_network, ip: "10.0.1.192"
-    #set some machine-specific options	
+    chefclient2_config.hostmanager.aliases = "chefclient2.local"
+    #set some machine-specific options
     chefclient2_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
-      v.customize ["modifyvm", :id, "--memory", "512"]
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
     end
-    chefclient2_config.vm.provision :shell, :path => "../provisioning_scripts/el6_puppet_agent.sh"
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #chefclient1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    #chefclient1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
   end
-  
-  #A Chef client node
+
+  #A CentOS 7 Chef client machine:
   config.vm.define "chefclient3".to_sym do |chefclient3_config|
-    chefclient3_config.vm.box = "debian-7.8-amd64"
+    chefclient3_config.vm.box = "centos-6.6-amd64-vmware"
+    chefclient3_config.vm.network :private_network, ip: "10.0.2.13"
     chefclient3_config.vm.hostname = "chefclient3.local"
-    chefclient3_config.hostmanager.enabled = true
-    chefclient3_config.vm.network :private_network, ip: "10.0.1.193"
-    #set some machine-specific options	
+    chefclient3_config.hostmanager.aliases = "chefclient3.local"
+    #set some machine-specific options
     chefclient3_config.vm.provider "virtualbox" do |v|
       #change the amount of RAM 
-      v.customize ["modifyvm", :id, "--memory", "512"]
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.13"
     end
-    chefclient3_config.vm.provision :shell, :path => "../provisioning_scripts/ubuntu_puppet_agent.sh"
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #chefclient1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    #chefclient1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
   end
-  
+
 end
