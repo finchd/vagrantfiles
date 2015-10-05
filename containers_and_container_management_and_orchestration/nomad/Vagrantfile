@@ -122,6 +122,20 @@ Vagrant.configure("2") do |config|
     config.vm.provider "vmware_fusion" do |v, override|
       v.vmx["memsize"] = "1024"
       v.vmx["numvcpus"] = "1"
+
+      #Create a 10GB volume and attach it to the VM:
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "#{ENV['PWD']}/.vagrant/additional-disks"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/nomadclient1.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 10GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+      v.vmx['scsi0:1.filename'] = file_to_disk
+      v.vmx['scsi0:1.present']  = 'TRUE'
+
     end
     #NFS folder sharing for Puppet modules and manifests
     #nomadclient1_config.vm.synced_folder ".", "/vagrant", :nfs => true
@@ -143,6 +157,20 @@ Vagrant.configure("2") do |config|
     config.vm.provider "vmware_fusion" do |v, override|
       v.vmx["memsize"] = "1024"
       v.vmx["numvcpus"] = "1"
+
+      #Create a 10GB volume and attach it to the VM:
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "#{ENV['PWD']}/.vagrant/additional-disks"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/nomadclient2.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 10GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+      v.vmx['scsi0:1.filename'] = file_to_disk
+      v.vmx['scsi0:1.present']  = 'TRUE'
+
     end
     #NFS folder sharing for Puppet modules and manifests
     #nomadclient2_config.vm.synced_folder ".", "/vagrant", :nfs => true
@@ -164,6 +192,20 @@ Vagrant.configure("2") do |config|
     config.vm.provider "vmware_fusion" do |v, override|
       v.vmx["memsize"] = "1024"
       v.vmx["numvcpus"] = "1"
+
+      #Create a 10GB volume and attach it to the VM:
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "#{ENV['PWD']}/.vagrant/additional-disks"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/nomadclient3.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 10GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+      v.vmx['scsi0:1.filename'] = file_to_disk
+      v.vmx['scsi0:1.present']  = 'TRUE'
+
     end
     #NFS folder sharing for Puppet modules and manifests
     #nomadclient3_config.vm.synced_folder ".", "/vagrant", :nfs => true
@@ -185,6 +227,20 @@ Vagrant.configure("2") do |config|
     config.vm.provider "vmware_fusion" do |v, override|
       v.vmx["memsize"] = "512"
       v.vmx["numvcpus"] = "1"
+
+      #Create a 10GB volume and attach it to the VM:
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "#{ENV['PWD']}/.vagrant/additional-disks"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/dockerregistry.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 10GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+      v.vmx['scsi0:1.filename'] = file_to_disk
+      v.vmx['scsi0:1.present']  = 'TRUE'
+
     end
     #NFS folder sharing for Puppet modules and manifests
     #dockerregistry_config.vm.synced_folder ".", "/vagrant", :nfs => true
