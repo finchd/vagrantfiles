@@ -1,0 +1,236 @@
+Vagrant.configure("2") do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+  
+  ####################
+  # Snippets to use
+  ####################
+  
+  #NFS folder sharing
+  #config.vm.synced_folder "modules", "/etc/puppet/modules", :nfs => true
+  
+  ####################
+  ####################
+  
+  #vagrant-hostmanager plugin options
+  config.hostmanager.enabled = true
+  config.hostmanager.ignore_private_ip = false
+  #update the /etc/hosts of the host OS
+  config.hostmanager.manage_host = true
+  
+  #Puppet master
+  config.vm.define "nomadpuppetserver".to_sym do |nomadpuppetserver_config|
+    nomadpuppetserver_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadpuppetserver_config.vm.network :private_network, ip: "10.0.2.10"
+    nomadpuppetserver_config.vm.hostname = "nomadpuppetserver.local"
+    nomadpuppetserver_config.hostmanager.aliases = %w(puppet nomadpuppetserver.local puppetexplorer.nomadpuppetserver.local puppetboard.nomadpuppetserver.local)
+    #set some machine-specific options
+    nomadpuppetserver_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "1024"]
+      v.vm.network :private_network, ip: "10.0.1.10"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    nomadpuppetserver_config.vm.synced_folder "production/", "/etc/puppetlabs/code/environments/production", :nfs => true
+    nomadpuppetserver_config.vm.synced_folder "/Users/nick/Documents/git/puppet-code/modules", "/etc/puppetlabs/code/environments/production/modules", :nfs => true
+    #nomadpuppetserver_config.vm.synced_folder "hieradata/", "/etc/puppetlabs/code/environments/production/hieradata", :nfs => true
+    #nomadpuppetserver_config.vm.synced_folder "files/", "/etc/puppet/files", :nfs => true
+    #Puppet master provisioning script
+    nomadpuppetserver_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_server.sh"
+  end
+
+  #A CentOS 7 Nomad server
+  config.vm.define "nomadserver1".to_sym do |nomadserver1_config|
+    nomadserver1_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadserver1_config.vm.network :private_network, ip: "10.0.2.11"
+    nomadserver1_config.vm.hostname = "nomadserver1.local"
+    nomadserver1_config.hostmanager.aliases = "nomadserver1.local"
+    #set some machine-specific options
+    nomadserver1_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadserver1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadserver1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Nomad server
+  config.vm.define "nomadserver2".to_sym do |nomadserver2_config|
+    nomadserver2_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadserver2_config.vm.network :private_network, ip: "10.0.2.12"
+    nomadserver2_config.vm.hostname = "nomadserver2.local"
+    nomadserver2_config.hostmanager.aliases = "nomadserver2.local"
+    #set some machine-specific options
+    nomadserver2_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.12"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadserver2_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadserver2_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Nomad server
+  config.vm.define "nomadserver3".to_sym do |nomadserver3_config|
+    nomadserver3_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadserver3_config.vm.network :private_network, ip: "10.0.2.13"
+    nomadserver3_config.vm.hostname = "nomadserver3.local"
+    nomadserver3_config.hostmanager.aliases = "nomadserver3.local"
+    #set some machine-specific options
+    nomadserver3_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.13"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadserver3_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadserver3_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Nomad client
+  config.vm.define "nomadclient1".to_sym do |nomadclient1_config|
+    nomadclient1_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadclient1_config.vm.network :private_network, ip: "10.0.2.14"
+    nomadclient1_config.vm.hostname = "nomadclient1.local"
+    nomadclient1_config.hostmanager.aliases = "nomadclient1.local"
+    #set some machine-specific options
+    nomadclient1_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.14"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadclient1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadclient1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Nomad client
+  config.vm.define "nomadclient2".to_sym do |nomadclient2_config|
+    nomadclient2_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadclient2_config.vm.network :private_network, ip: "10.0.2.15"
+    nomadclient2_config.vm.hostname = "nomadclient2.local"
+    nomadclient2_config.hostmanager.aliases = "nomadclient2.local"
+    #set some machine-specific options
+    nomadclient2_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.15"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadclient2_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadclient2_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Nomad client
+  config.vm.define "nomadclient3".to_sym do |nomadclient3_config|
+    nomadclient3_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadclient3_config.vm.network :private_network, ip: "10.0.2.16"
+    nomadclient3_config.vm.hostname = "nomadclient3.local"
+    nomadclient3_config.hostmanager.aliases = "nomadclient3.local"
+    #set some machine-specific options
+    nomadclient3_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.16"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadclient3_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadclient3_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Docker registry
+  config.vm.define "dockerregistry".to_sym do |dockerregistry_config|
+    dockerregistry_config.vm.box = "centos-7.1-amd64-vmware"
+    dockerregistry_config.vm.network :private_network, ip: "10.0.2.17"
+    dockerregistry_config.vm.hostname = "dockerregistry.local"
+    dockerregistry_config.hostmanager.aliases = "dockerregistry.local"
+    #set some machine-specific options
+    dockerregistry_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.17"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #dockerregistry_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    dockerregistry_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Nomad client
+  config.vm.define "nomadmonitoring".to_sym do |nomadmonitoring_config|
+    nomadmonitoring_config.vm.box = "centos-7.1-amd64-vmware"
+    nomadmonitoring_config.vm.network :private_network, ip: "10.0.2.18"
+    nomadmonitoring_config.vm.hostname = "nomadmonitoring.local"
+    nomadmonitoring_config.hostmanager.aliases = "nomadmonitoring.local"
+    #set some machine-specific options
+    nomadmonitoring_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "1024"]
+      v.vm.network :private_network, ip: "10.0.1.18"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #nomadmonitoring_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    nomadmonitoring_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 HAproxy gateway machine
+  config.vm.define "haproxy1".to_sym do |haproxy1_config|
+    haproxy1_config.vm.box = "centos-7.1-amd64-vmware"
+    haproxy1_config.vm.network :private_network, ip: "10.0.2.21"
+    haproxy1_config.vm.hostname = "haproxy1.local"
+    haproxy1_config.hostmanager.aliases = "haproxy1.local"
+    #set some machine-specific options
+    haproxy1_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.21"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "256"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #haproxy1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    haproxy1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+end
