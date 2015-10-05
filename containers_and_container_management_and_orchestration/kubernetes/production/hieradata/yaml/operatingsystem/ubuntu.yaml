@@ -1,0 +1,3 @@
+---
+testmessage : 'ubuntu'
+heka_package_url: 'https://github.com/mozilla-services/heka/releases/download/v0.10.0b1/heka_0.10.0b1_amd64.deb'
