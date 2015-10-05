@@ -180,6 +180,12 @@ node 'nomadserver3.local' {
 node 'nomadclient1.local' {
 
   ###############################
+  # Docker installation/setup
+  ###############################
+
+  include profile::docker
+
+  ###############################
   # SSH installation/setup
   ###############################
 
@@ -226,6 +232,12 @@ node 'nomadclient1.local' {
 }
 
 node 'nomadclient2.local' {
+
+  ###############################
+  # Docker installation/setup
+  ###############################
+
+  include profile::docker
 
   ###############################
   # SSH installation/setup
@@ -276,6 +288,12 @@ node 'nomadclient2.local' {
 node 'nomadclient3.local' {
 
   ###############################
+  # Docker installation/setup
+  ###############################
+
+  include profile::docker
+
+  ###############################
   # SSH installation/setup
   ###############################
 
@@ -322,6 +340,12 @@ node 'nomadclient3.local' {
 }
 
 node 'dockerregistry.local' {
+
+  ###############################
+  # Docker installation/setup
+  ###############################
+
+  include profile::docker
 
   ###############################
   # SSH installation/setup
