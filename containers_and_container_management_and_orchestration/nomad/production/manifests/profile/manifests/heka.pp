@@ -9,6 +9,7 @@ class profile::heka {
     version => hiera('heka_version'),
     heka_max_procs       => inline_template('<%= (@processorcount.to_f / 6).ceil %>'),
     purge_unmanaged_configs => true,
+    cgroup_memory_limit  => '200M',
     global_config_settings => {
       'poolsize' => 100,
       'hostname' => "\"${::fqdn}\"",
