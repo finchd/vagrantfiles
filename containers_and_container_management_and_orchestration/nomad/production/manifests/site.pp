@@ -239,6 +239,7 @@ node 'nomadclient2.local' {
   ###############################
 
   include profile::docker
+  include profile::docker::logging
 
   ###############################
   # SSH installation/setup
@@ -293,6 +294,7 @@ node 'nomadclient3.local' {
   ###############################
 
   include profile::docker
+  include profile::docker::logging
 
   ###############################
   # SSH installation/setup
@@ -347,6 +349,7 @@ node 'dockerregistry.local' {
   ###############################
 
   include profile::docker
+  include profile::docker::logging
 
   ###############################
   # SSH installation/setup
