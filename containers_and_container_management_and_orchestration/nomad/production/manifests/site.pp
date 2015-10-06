@@ -443,6 +443,12 @@ node 'haproxy1.local' {
   #Send collectd metrics to the monitoring VM
   #include profile::collectd::write_graphite
 
+  ###############################
+  # HAProxy installation/setup
+  ###############################
+
+  include profile::haproxy
+
 }
 
 node 'nomadmonitoring.local' {
