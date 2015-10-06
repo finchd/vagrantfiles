@@ -13,7 +13,8 @@ class profile::apache {
   ::apache::mod { 'headers': }
 
   #Create a folder where the SSL certificate and key will live:
-  file {'/etc/apache2/ssl': 
+  file {'apache_ssl_dir': 
+    path => hiera('apache_ssl_dir'),
     ensure => directory,
     owner => 'root',
     group => 'root',
@@ -23,16 +24,16 @@ class profile::apache {
   #Create /sites/apps for Apache to serve static applications out of:
   file {'/sites/': 
       ensure => directory,
-      owner => 'www-data',
-      group => 'www-data',
-      mode => '755',
+      owner  => hiera('apache_user'),
+      group  => hiera('apache_group'),
+      mode   => '755',
     }
 
   file {'/sites/apps/': 
       ensure => directory,
-      owner => 'www-data',
-      group => 'www-data',
-      mode => '755',
+      owner  => hiera('apache_user'),
+      group  => hiera('apache_group'),
+      mode   => '755',
     }
 
   #Make rsyslog watch the Apache log files:

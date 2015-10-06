@@ -2,3 +2,6 @@
 testmessage : 'centos'
 heka_package_url: 'https://github.com/mozilla-services/heka/releases/download/v0.10.0b1/heka-0_10_0b1-linux-amd64.rpm'
 elasticsearch_package_url: 'https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.noarch.rpm'
+apache_ssl_dir: '/etc/httpd/ssl'
+apache_user: 'apache'
+apache_group: 'apache'

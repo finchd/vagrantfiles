@@ -28,22 +28,22 @@ class profile::kibana3::apache_virtualhost {
   class { '::kibana3':
     config_es_port      => '9200',
     config_es_protocol  => 'http',
-    config_es_server    => 'dnsmonitoring.local',
+    config_es_server    => 'nomadmonitoring.local',
     manage_ws           => false,
     manage_git          => false,
     k3_install_folder   => '/sites/apps/kibana3',
     #This Git commit SHA1 hash corresponds to v.3.1.2 of Kibana:
     # https://github.com/elasticsearch/kibana/commit/07bbd7ec6c9bd81a1c8922c8b28adedb6dc2160b
     k3_release          => '07bbd7ec6c9bd81a1c8922c8b28adedb6dc2160b',
-    k3_folder_owner     => 'www-data',
-  }
+    k3_folder_owner     => hiera('apache_group'),
+   }
 
   #A folder to host Kibana's 3 static files:
   file {'/sites/apps/kibana3': 
       ensure => directory,
-      owner => 'www-data',
-      group => 'www-data',
-      mode => '755',
+      owner  => hiera('apache_user'),
+      group  => hiera('apache_group'),
+      mode   => '755',
   }
 
 }

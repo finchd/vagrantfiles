@@ -2,3 +2,6 @@
 testmessage : 'ubuntu'
 heka_package_url: 'https://github.com/mozilla-services/heka/releases/download/v0.10.0b1/heka_0.10.0b1_amd64.deb'
 elasticsearch_package_url: 'https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.deb'
+apache_ssl_dir: '/etc/apache2/ssl'
+apache_user: 'www-data'
+apache_group: 'www-data'
