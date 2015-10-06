@@ -448,6 +448,8 @@ node 'haproxy1.local' {
   ###############################
 
   include profile::haproxy
+  include profile::haproxy::logging
+  include profile::haproxy::logging::elasticsearch_export
 
 }
 
