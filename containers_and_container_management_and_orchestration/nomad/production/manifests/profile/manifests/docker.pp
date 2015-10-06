@@ -37,4 +37,44 @@ class profile::docker {
     command     => '/usr/bin/systemctl restart docker.service',
     refreshonly => true,
   }
+
+}
+
+class profile::docker::logging {
+
+  #Gather Docker logs with Heka:
+  heka::plugin {'docker_log_input':
+    type     => 'DockerLogInput',
+    notify => Service['heka'],
+  }
+
+  #Gather Docker events too:
+  heka::plugin { 'docker_event_input':
+    type   => 'DockerEventInput',
+    notify => Service['heka'],
+  }
+
+  #Docker log/event Elasticsearch encoding and output:
+  #The encoder:
+  ::heka::plugin { 'elasticsearch_logstash_v0_encoder':
+    type => 'ESLogstashV0Encoder',
+    settings => {
+    'es_index_from_timestamp' => 'true',
+    'type_name' => '"%{Type}"',
+    },
+    notify => Service['heka'],
+  }
+  #The output which uses the encoder:
+  ::heka::plugin { 'elasticsearch_output_1':
+    type => 'ElasticSearchOutput',
+    settings => {
+      'message_matcher' => "\"Type == 'DockerEvent' || Type == 'DockerLog'\"",
+      'server' => '"http://nomadmonitoring.local:9200"',
+      'flush_interval' => '5000',
+      'flush_count' => '10',
+      'encoder' => '"elasticsearch_logstash_v0_encoder"',
+    },
+    notify => Service['heka'],
+  }
+
 }
