@@ -7,7 +7,7 @@ class profile::heka {
   class { '::heka':
     package_download_url => hiera('heka_package_url'),
     version => hiera('heka_version'),
-    heka_max_procs         => 4,
+    heka_max_procs       => inline_template('<%= (@processorcount.to_f / 6).ceil %>'),
     purge_unmanaged_configs => true,
     global_config_settings => {
       'poolsize' => 100,
