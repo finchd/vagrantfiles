@@ -3,7 +3,7 @@ class profile::elasticsearch {
     class { '::elasticsearch':
     java_install => false,
     package_url => hiera('elasticsearch_package_url'),
-    config => { 'cluster.name'             => 'logstash',
+    config => { 'cluster.name'             => 'nomad',
                 'network.host'             => '0.0.0.0',
                 'index.number_of_replicas' => '1',
                 'index.number_of_shards'   => '4',
