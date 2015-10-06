@@ -74,6 +74,14 @@ class profile::docker::logging {
       'flush_count' => '10',
       'encoder' => '"elasticsearch_logstash_v0_encoder"',
     },
+    subsetting_sections => {
+      buffering => {
+        #256MB, in bytes:
+        max_file_size   => '268435456',
+        #1GB, in bytes:
+        max_buffer_size => '1073741824',
+      }
+    },
     notify => Service['heka'],
   }
 
