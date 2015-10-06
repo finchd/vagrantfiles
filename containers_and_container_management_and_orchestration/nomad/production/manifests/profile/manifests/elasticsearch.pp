@@ -2,8 +2,7 @@ class profile::elasticsearch {
 
     class { '::elasticsearch':
     java_install => false,
-    #hieravaluereplace
-    package_url => 'https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.5.1.deb',
+    package_url => hiera('elasticsearch_package_url'),
     config => { 'cluster.name'             => 'logstash',
                 'network.host'             => '0.0.0.0',
                 'index.number_of_replicas' => '1',
