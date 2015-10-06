@@ -184,6 +184,7 @@ node 'nomadclient1.local' {
   ###############################
 
   include profile::docker
+  include profile::docker::logging
 
   ###############################
   # SSH installation/setup
@@ -482,6 +483,20 @@ node 'nomadmonitoring.local' {
 
   #Include Elasticsearch
   include profile::elasticsearch
+
+  ###############################
+  # Apache installation/setup
+  ###############################
+
+  #Install Apache so we can run Kibana and Grafana:
+  include profile::apache
+
+  ###############################
+  # Kibana installation/setup
+  ###############################
+
+  #Include the profile that sets up a virtual host for Kibana3:
+  include profile::kibana3::apache_virtualhost
 
   ###############################
   # collectd installation/setup
