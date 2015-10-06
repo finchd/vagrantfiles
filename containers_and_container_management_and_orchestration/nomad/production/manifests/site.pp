@@ -443,6 +443,11 @@ node 'haproxy1.local' {
 
 node 'nomadmonitoring.local' {
 
+  #Install Java so we can run Riemann; use the -> arrow so that it gets instaleld:
+  package {'java-1.8.0-openjdk':
+    ensure => installed,
+  }
+
   ###############################
   # SSH installation/setup
   ###############################
@@ -470,6 +475,13 @@ node 'nomadmonitoring.local' {
 
   #Install Heka and configure it with some plugins:
   include profile::heka
+
+  ###############################
+  # Elasticsearch installation/setup
+  ###############################
+
+  #Include Elasticsearch
+  include profile::elasticsearch
 
   ###############################
   # collectd installation/setup
