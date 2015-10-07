@@ -185,6 +185,23 @@ node 'nomadclient1.local' {
 
   include profile::docker
   include profile::docker::logging
+  include profile::docker::haproxy
+
+  ###############################
+  # HAProxy node installation/setup
+  ###############################  
+
+  include profile::haproxy
+  include profile::haproxy_node
+  include profile::haproxy_node::logging
+
+  ###############################
+  # Heka installation/setup
+  ###############################
+
+  #Install Heka and configure it with some plugins:
+  include profile::heka
+  include profile::heka::elasticsearch_output
 
   ###############################
   # SSH installation/setup
@@ -206,13 +223,6 @@ node 'nomadclient1.local' {
 
   #Include a profile that sets up NTP
   include profile::ntp::client
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
 
   ###############################
   # collectd installation/setup
@@ -240,6 +250,23 @@ node 'nomadclient2.local' {
 
   include profile::docker
   include profile::docker::logging
+  include profile::docker::haproxy
+
+  ###############################
+  # HAProxy node installation/setup
+  ###############################  
+
+  include profile::haproxy
+  include profile::haproxy_node
+  include profile::haproxy_node::logging
+
+  ###############################
+  # Heka installation/setup
+  ###############################
+
+  #Install Heka and configure it with some plugins:
+  include profile::heka
+  include profile::heka::elasticsearch_output
 
   ###############################
   # SSH installation/setup
@@ -261,13 +288,6 @@ node 'nomadclient2.local' {
 
   #Include a profile that sets up NTP
   include profile::ntp::client
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
 
   ###############################
   # collectd installation/setup
@@ -295,6 +315,23 @@ node 'nomadclient3.local' {
 
   include profile::docker
   include profile::docker::logging
+  include profile::docker::haproxy
+
+  ###############################
+  # HAProxy node installation/setup
+  ###############################  
+
+  include profile::haproxy
+  include profile::haproxy_node
+  include profile::haproxy_node::logging
+
+  ###############################
+  # Heka installation/setup
+  ###############################
+
+  #Install Heka and configure it with some plugins:
+  include profile::heka
+  include profile::heka::elasticsearch_output
 
   ###############################
   # SSH installation/setup
@@ -316,13 +353,6 @@ node 'nomadclient3.local' {
 
   #Include a profile that sets up NTP
   include profile::ntp::client
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
 
   ###############################
   # collectd installation/setup
@@ -350,6 +380,23 @@ node 'dockerregistry.local' {
 
   include profile::docker
   include profile::docker::logging
+  include profile::docker::haproxy
+
+  ###############################
+  # HAProxy node installation/setup
+  ###############################  
+
+  include profile::haproxy
+  include profile::haproxy_node
+  include profile::haproxy_node::logging
+
+  ###############################
+  # Heka installation/setup
+  ###############################
+
+  #Install Heka and configure it with some plugins:
+  include profile::heka
+  include profile::heka::elasticsearch_output
 
   ###############################
   # SSH installation/setup
@@ -371,13 +418,6 @@ node 'dockerregistry.local' {
 
   #Include a profile that sets up NTP
   include profile::ntp::client
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
 
   ###############################
   # collectd installation/setup
@@ -426,6 +466,7 @@ node 'haproxy1.local' {
 
   #Install Heka and configure it with some plugins:
   include profile::heka
+  include profile::heka::elasticsearch_output
 
   ###############################
   # collectd installation/setup
@@ -448,8 +489,8 @@ node 'haproxy1.local' {
   ###############################
 
   include profile::haproxy
-  include profile::haproxy::logging
-  include profile::haproxy::logging::elasticsearch_export
+  include profile::haproxy_gateway
+  include profile::haproxy_gateway::logging
 
 }
 
