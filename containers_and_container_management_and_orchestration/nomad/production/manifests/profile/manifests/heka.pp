@@ -107,3 +107,36 @@ class profile::heka {
   }
   
 }
+
+class profile::heka::elasticsearch_output {
+
+  ::heka::plugin { 'elasticsearch_logstash_v0_encoder':
+    type => 'ESLogstashV0Encoder',
+    settings => {
+    'es_index_from_timestamp' => 'true',
+    'type_name' => '"%{Type}"',
+    },
+    notify => Service['heka'],
+  }
+  #The output which uses the encoder:
+  ::heka::plugin { 'elasticsearch_output_1':
+    type => 'ElasticSearchOutput',
+    settings => {
+      'message_matcher' => "\"Type == 'haproxy' || Type == 'DockerEvent' || Type == 'DockerLog'\"",
+      'server' => '"http://nomadmonitoring.local:9200"',
+      'flush_interval' => '5000',
+      'flush_count' => '10',
+      'encoder' => '"elasticsearch_logstash_v0_encoder"',
+    },
+    subsetting_sections => {
+      buffering => {
+        #256MB, in bytes:
+        max_file_size   => '268435456',
+        #1GB, in bytes:
+        max_buffer_size => '1073741824',
+      }
+    },
+    notify => Service['heka'],
+  }
+
+}
