@@ -237,6 +237,17 @@ class profile::bind::master {
     source_base => 'puppet:///files/bind/zone_files/',
   }
 
+  #Install the bind-utils package, which has things like `dig` in it:
+  package {'bind-utils':
+    ensure => installed,
+  }
+
+}
+
+
+class profile::bind::logging {
+
+
   ###########################################
   # Heka setup for DNS query log parsing
   ###########################################
@@ -267,27 +278,6 @@ class profile::bind::master {
     },
   }
 
-  #Heka Elasticsearch encoding and output:
-  #The encoder:
-  ::heka::plugin { 'elasticsearch_logstash_v0_encoder':
-    type => 'ESLogstashV0Encoder',
-    settings => {
-      'es_index_from_timestamp' => 'true',
-      'type_name' => '"%{Type}"',
-    }
-  }
-  #The output which uses the encoder:
-  ::heka::plugin { 'elasticsearch_output_1':
-    type => 'ElasticSearchOutput',
-    settings => {
-      'message_matcher' => "\"Type == 'bind_query'\"",
-      'server' => '"http://dnsmonitoring.local:9200"',
-      'flush_interval' => '5000',
-      'flush_count' => '10',
-      'encoder' => '"elasticsearch_logstash_v0_encoder"',
-    }
-  }
-
   #Add an RstEncoder and LogOutput so that we can see the BIND query logs get sent to
   #Heka's standard output to make sure things are working. Adapted from:
   #https://hekad.readthedocs.org/en/latest/getting_started.html#simplest-heka-config
@@ -313,6 +303,39 @@ class profile::bind::master {
     group => 'root',
     mode =>  '755',
     source => 'puppet:///files/heka/bind_query_log_decode.lua',
+  }
+
+}
+
+class profile::bind::logging::elasticsearch_export {
+
+  ::heka::plugin { 'elasticsearch_logstash_v0_encoder':
+    type => 'ESLogstashV0Encoder',
+    settings => {
+    'es_index_from_timestamp' => 'true',
+    'type_name' => '"%{Type}"',
+    },
+    notify => Service['heka'],
+  }
+  #The output which uses the encoder:
+  ::heka::plugin { 'elasticsearch_output_1':
+    type => 'ElasticSearchOutput',
+    settings => {
+      'message_matcher' => "\"Type == 'bind_query'\"",
+      'server' => '"http://nomadmonitoring.local:9200"',
+      'flush_interval' => '5000',
+      'flush_count' => '10',
+      'encoder' => '"elasticsearch_logstash_v0_encoder"',
+    },
+    subsetting_sections => {
+      buffering => {
+        #256MB, in bytes:
+        max_file_size   => '268435456',
+        #1GB, in bytes:
+        max_buffer_size => '1073741824',
+      }
+    },
+    notify => Service['heka'],
   }
 
 }
