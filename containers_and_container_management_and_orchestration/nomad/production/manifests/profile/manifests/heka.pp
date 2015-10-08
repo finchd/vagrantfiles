@@ -122,7 +122,7 @@ class profile::heka::elasticsearch_output {
   ::heka::plugin { 'elasticsearch_output_1':
     type => 'ElasticSearchOutput',
     settings => {
-      'message_matcher' => "\"Type == 'haproxy' || Type == 'DockerEvent' || Type == 'DockerLog'\"",
+      'message_matcher' => "\"Type == 'haproxy' || Type == 'DockerEvent' || Type == 'DockerLog' || Type == 'bind_query'\"",
       'server' => '"http://nomadmonitoring.local:9200"',
       'flush_interval' => '5000',
       'flush_count' => '10',
