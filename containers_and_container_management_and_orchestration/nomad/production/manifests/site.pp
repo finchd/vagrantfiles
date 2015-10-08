@@ -204,6 +204,14 @@ node 'nomadclient1.local' {
   include profile::heka::elasticsearch_output
 
   ###############################
+  # BIND installation/setup
+  ###############################
+  
+  #Install BIND so that we can experiment with DNS-based routing between containers:
+  include profile::bind::master
+  include profile::bind::logging
+
+  ###############################
   # SSH installation/setup
   ###############################
 
@@ -267,6 +275,14 @@ node 'nomadclient2.local' {
   #Install Heka and configure it with some plugins:
   include profile::heka
   include profile::heka::elasticsearch_output
+
+  ###############################
+  # BIND installation/setup
+  ###############################
+  
+  #Install BIND so that we can experiment with DNS-based routing between containers:
+  include profile::bind::master
+  include profile::bind::logging
 
   ###############################
   # SSH installation/setup
@@ -334,6 +350,14 @@ node 'nomadclient3.local' {
   include profile::heka::elasticsearch_output
 
   ###############################
+  # BIND installation/setup
+  ###############################
+  
+  #Install BIND so that we can experiment with DNS-based routing between containers:
+  include profile::bind::master
+  include profile::bind::logging
+
+  ###############################
   # SSH installation/setup
   ###############################
 
@@ -397,6 +421,14 @@ node 'dockerregistry.local' {
   #Install Heka and configure it with some plugins:
   include profile::heka
   include profile::heka::elasticsearch_output
+
+  ###############################
+  # BIND installation/setup
+  ###############################
+  
+  #Install BIND so that we can experiment with DNS-based routing between containers:
+  include profile::bind::master
+  include profile::bind::logging
 
   ###############################
   # SSH installation/setup
