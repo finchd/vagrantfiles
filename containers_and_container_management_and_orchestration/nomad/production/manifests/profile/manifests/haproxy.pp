@@ -32,7 +32,7 @@ class profile::haproxy {
   #HAProxy stats page:
   haproxy::listen { 'stats':
     ipaddress => '*',
-    ports     => '9090',
+    ports     => '9500',
     options   => {
       'mode'  => 'http',
       'stats' => [
