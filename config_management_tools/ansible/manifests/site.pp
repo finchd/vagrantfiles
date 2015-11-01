@@ -10,7 +10,7 @@ node default {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -31,9 +31,9 @@ node 'ansiblemaster.local' {
   class { 'puppetdb':
     listen_address => '0.0.0.0'
   }
-  
+
   include puppetdb::master::config
-  
+
   #Apache modules for PuppetBoard:
   class { 'apache': }
   class { 'apache::mod::wsgi': }
@@ -48,7 +48,7 @@ node 'ansiblemaster.local' {
     vhost_name => "puppetboard.${fqdn}",
     port => 80,
   }
- 
+
   #This module is from: https://github.com/saz/puppet-rsyslog
   class { 'rsyslog::server':
     enable_tcp => true,
@@ -78,7 +78,7 @@ node 'ansible1.local' {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -97,7 +97,7 @@ node 'ansible1.local' {
     log_local      => true,
     log_auth_local => true,
     custom_config  => undef,
-    server         => 'saltmaster.local',
+    server         => 'ansiblemaster.local',
     port           => '514',
   }
 
@@ -122,7 +122,7 @@ node 'ansible2.local' {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -141,7 +141,7 @@ node 'ansible2.local' {
     log_local      => true,
     log_auth_local => true,
     custom_config  => undef,
-    server         => 'saltmaster.local',
+    server         => 'ansiblemaster.local',
     port           => '514',
   }
 
@@ -166,7 +166,7 @@ node 'ansible3.local' {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -185,7 +185,7 @@ node 'ansible3.local' {
     log_local      => true,
     log_auth_local => true,
     custom_config  => undef,
-    server         => 'saltmaster.local',
+    server         => 'ansiblemaster.local',
     port           => '514',
   }
 
@@ -210,7 +210,7 @@ node 'ansible4.local' {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -229,10 +229,10 @@ node 'ansible4.local' {
     log_local      => true,
     log_auth_local => true,
     custom_config  => undef,
-    server         => 'saltmaster.local',
+    server         => 'ansiblemaster.local',
     port           => '514',
   }
-  
+
   #This module is: https://github.com/puppetlabs/puppetlabs-ntp
   class { '::ntp':
     servers  => [ '0.centos.pool.node.org', '1.centos.pool.node.org', '2.centos.pool.node.org', '3.centos.pool.node.org' ],
@@ -253,7 +253,7 @@ node 'ansible5.local' {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -272,10 +272,10 @@ node 'ansible5.local' {
     log_local      => true,
     log_auth_local => true,
     custom_config  => undef,
-    server         => 'saltmaster.local',
+    server         => 'ansiblemaster.local',
     port           => '514',
   }
-  
+
   #This module is: https://github.com/puppetlabs/puppetlabs-ntp
   class { '::ntp':
     servers  => [ '0.ubuntu.pool.ntp.org', '1.ubuntu.pool.ntp.org', '2.ubuntu.pool.ntp.org', '3.ubuntu.pool.ntp.org' ],
@@ -297,7 +297,7 @@ node 'ansible6.local' {
       #'PasswordAuthentication' => 'no',
       #How many authentication attempts to allow before disconnecting:
       'MaxAuthTries'         => '10',
-      'PermitEmptyPasswords' => 'no', 
+      'PermitEmptyPasswords' => 'no',
       'PermitRootLogin'      => 'no',
       'Port'                 => [22],
       'PubkeyAuthentication' => 'yes',
@@ -316,10 +316,10 @@ node 'ansible6.local' {
     log_local      => true,
     log_auth_local => true,
     custom_config  => undef,
-    server         => 'saltmaster.local',
+    server         => 'ansiblemaster.local',
     port           => '514',
   }
-  
+
   #This module is: https://github.com/puppetlabs/puppetlabs-ntp
   class { '::ntp':
     servers  => [ '0.centos.pool.node.org', '1.centos.pool.node.org', '2.centos.pool.node.org', '3.centos.pool.node.org' ],
