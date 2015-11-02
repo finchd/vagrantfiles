@@ -64,7 +64,6 @@ Vagrant.configure("2") do |config|
     #powerdnsserver1_config.vm.synced_folder ".", "/vagrant", :nfs => true
     powerdnsserver1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
   end
-end
 
   #A CentOS 7 BIND replica server
   config.vm.define "bindreplica1".to_sym do |bindreplica1_config|
@@ -191,3 +190,4 @@ end
     #powerdnsmonitoring_config.vm.synced_folder ".", "/vagrant", :nfs => true
     powerdnsmonitoring_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
   end 
+end
