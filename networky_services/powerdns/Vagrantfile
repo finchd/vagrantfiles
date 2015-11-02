@@ -1,0 +1,193 @@
+Vagrant.configure("2") do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+  
+  ####################
+  # Snippets to use
+  ####################
+  
+  #NFS folder sharing
+  #config.vm.synced_folder "modules", "/etc/puppet/modules", :nfs => true
+  
+  ####################
+  ####################
+  
+  #vagrant-hostmanager plugin options
+  config.hostmanager.enabled = true
+  config.hostmanager.ignore_private_ip = false
+  #update the /etc/hosts of the host OS
+  config.hostmanager.manage_host = true
+  
+  #Puppet master
+  config.vm.define "powerdnspuppetserver".to_sym do |dnspuppetserver_config|
+    dnspuppetserver_config.vm.box = "centos-7.1-amd64-vmware"
+    dnspuppetserver_config.vm.network :private_network, ip: "10.0.2.20"
+    dnspuppetserver_config.vm.hostname = "powerdnspuppetserver.local"
+    dnspuppetserver_config.hostmanager.aliases = %w(puppet powerdnspuppetserver.local puppetexplorer.powerdnspuppetserver.local puppetboard.powerdnspuppetserver.local)
+    #set some machine-specific options
+    dnspuppetserver_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "1024"]
+      v.vm.network :private_network, ip: "10.0.1.10"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "1024"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    dnspuppetserver_config.vm.synced_folder "production/", "/etc/puppetlabs/code/environments/production", :nfs => true
+    dnspuppetserver_config.vm.synced_folder "/Users/nick/Documents/git/puppet-code/modules", "/etc/puppetlabs/code/environments/production/modules", :nfs => true
+    #dnspuppetserver_config.vm.synced_folder "hieradata/", "/etc/puppetlabs/code/environments/production/hieradata", :nfs => true
+    #dnspuppetserver_config.vm.synced_folder "files/", "/etc/puppet/files", :nfs => true
+    #Puppet master provisioning script
+    dnspuppetserver_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_server.sh"
+  end
+
+  #A CentOS 7 Power DNS master server
+  config.vm.define "powerdnsserver1".to_sym do |powerdnsserver1_config|
+    powerdnsserver1_config.vm.box = "centos-7.1-amd64-vmware"
+    powerdnsserver1_config.vm.network :private_network, ip: "10.0.2.21"
+    powerdnsserver1_config.vm.hostname = "powerdnsserver1.local"
+    powerdnsserver1_config.hostmanager.aliases = "powerdnsserver1.local"
+    #set some machine-specific options
+    powerdnsserver1_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #powerdnsserver1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    powerdnsserver1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+end
+
+  #A CentOS 7 BIND replica server
+  config.vm.define "bindreplica1".to_sym do |bindreplica1_config|
+    bindreplica1_config.vm.box = "centos-7.1-amd64-vmware"
+    bindreplica1_config.vm.network :private_network, ip: "10.0.2.22"
+    bindreplica1_config.vm.hostname = "bindreplica1.local"
+    bindreplica1_config.hostmanager.aliases = "bindreplica1.local"
+    #set some machine-specific options
+    bindreplica1_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #bindreplica1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    bindreplica1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 BIND replica server
+  config.vm.define "bindreplica2".to_sym do |bindreplica2_config|
+    bindreplica2_config.vm.box = "centos-7.1-amd64-vmware"
+    bindreplica2_config.vm.network :private_network, ip: "10.0.2.23"
+    bindreplica2_config.vm.hostname = "bindreplica2.local"
+    bindreplica2_config.hostmanager.aliases = "bindreplica2.local"
+    #set some machine-specific options
+    bindreplica2_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #bindreplica2_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    bindreplica2_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 DNS client
+  config.vm.define "dnsclient1".to_sym do |dnsclient1_config|
+    dnsclient1_config.vm.box = "centos-7.1-amd64-vmware"
+    dnsclient1_config.vm.network :private_network, ip: "10.0.2.24"
+    dnsclient1_config.vm.hostname = "dnsclient1.local"
+    dnsclient1_config.hostmanager.aliases = "dnsclient1.local"
+    #set some machine-specific options
+    dnsclient1_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #dnsclient1_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    dnsclient1_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Heka/Elasticsearch/Kibana 3/4 server for viewing DNS logs:
+  config.vm.define "powerdnslogging".to_sym do |powerdnslogging_config|
+    powerdnslogging_config.vm.box = "centos-7.1-amd64-vmware"
+    powerdnslogging_config.vm.network :private_network, ip: "10.0.2.25"
+    powerdnslogging_config.vm.hostname = "powerdnslogging.local"
+    powerdnslogging_config.hostmanager.aliases = "powerdnslogging.local"
+    #set some machine-specific options
+    powerdnslogging_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM 
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1"
+    end
+    #NFS folder sharing for Puppet modules and manifests
+    #powerdnslogging_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    powerdnslogging_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 InfluxDB/Grafana server for collecting/viewing DNS metrics:
+  config.vm.define "powerdnsmetrics".to_sym do |powerdnsmetrics_config|
+    powerdnsmetrics_config.vm.box = "centos-7.1-amd64-vmware"
+    powerdnsmetrics_config.vm.network :private_network, ip: "10.0.2.26"
+    powerdnsmetrics_config.vm.hostname = "powerdnsmetrics.local"
+    powerdnsmetrics_config.hostmanager.aliases = "powerdnsmetrics.local"
+    #set some machine-specific options
+    powerdnsmetrics_config.vm.provider "virtualbox" do |v| 
+      #change the amount of RAM.
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end 
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1" 
+    end 
+    #NFS folder sharing for Puppet modules and manifests
+    #powerdnsmetrics_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    powerdnsmetrics_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end
+
+  #A CentOS 7 Icinga 2 server to monitor the DNS servers
+  config.vm.define "powerdnsmonitoring".to_sym do |powerdnsmonitoring_config|
+    powerdnsmonitoring_config.vm.box = "centos-7.1-amd64-vmware"
+    powerdnsmonitoring_config.vm.network :private_network, ip: "10.0.2.27"
+    powerdnsmonitoring_config.vm.hostname = "powerdnsmonitoring.local"
+    powerdnsmonitoring_config.hostmanager.aliases = "powerdnsmonitoring.local"
+    #set some machine-specific options
+    powerdnsmonitoring_config.vm.provider "virtualbox" do |v|
+      #change the amount of RAM.
+      v.customize ["modifyvm", :id, "--memory", "256"]
+      v.vm.network :private_network, ip: "10.0.1.11"
+    end 
+    config.vm.provider "vmware_fusion" do |v, override|
+      v.vmx["memsize"] = "512"
+      v.vmx["numvcpus"] = "1" 
+    end 
+    #NFS folder sharing for Puppet modules and manifests
+    #powerdnsmonitoring_config.vm.synced_folder ".", "/vagrant", :nfs => true
+    powerdnsmonitoring_config.vm.provision :shell, :path => "../provisioning_scripts/el7_puppet4_agent.sh"
+  end 
