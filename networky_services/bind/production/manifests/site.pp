@@ -107,7 +107,7 @@ node 'dnsserver1.local' {
 
 }
 
-node 'dnsmaster2.local' {
+node 'dnsserver2.local' {
 
   ###############################
   # SSH installation/setup
@@ -121,7 +121,7 @@ node 'dnsmaster2.local' {
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
@@ -142,33 +142,33 @@ node 'dnsmaster2.local' {
   ###############################
 
   #Make this machine a Consul client:
-  include profile::consul::client
+  #include profile::consul::client
 
   ###############################
   # collectd installation/setup
   ###############################
 
   #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
+  #include profile::collectd
   
   #Gather NTP stats:
-  include profile::collectd::system_metrics
+  #include profile::collectd::system_metrics
   
   #Gather network metrics
-  include profile::collectd::network_metrics
+  #include profile::collectd::network_metrics
   
   #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
+  #include profile::collectd::write_graphite
 
   ###############################
   # NRPE installation/configuration
   ###############################
 
   #Install and configure NRPE
-  include profile::icinga2::nrpe
+  #include profile::icinga2::nrpe
   
   #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
+  #include profile::icinga2::nrpe::objects
 
   ###############################
   # BIND installation/setup
@@ -179,10 +179,9 @@ node 'dnsmaster2.local' {
   include profile::bind  
   include profile::bind::master
 
-
 }
 
-node 'dnsslave1.local' {
+node 'dnsreplica1.local' {
 
   ###############################
   # SSH installation/setup
@@ -196,7 +195,7 @@ node 'dnsslave1.local' {
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
@@ -217,45 +216,46 @@ node 'dnsslave1.local' {
   ###############################
 
   #Make this machine a Consul client:
-  include profile::consul::client
+  #include profile::consul::client
 
   ###############################
   # collectd installation/setup
   ###############################
 
   #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
+  #include profile::collectd
   
   #Gather NTP stats:
-  include profile::collectd::system_metrics
+  #include profile::collectd::system_metrics
   
   #Gather network metrics
-  include profile::collectd::network_metrics
+  #include profile::collectd::network_metrics
   
   #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
+  #include profile::collectd::write_graphite
 
   ###############################
   # NRPE installation/configuration
   ###############################
 
   #Install and configure NRPE
-  include profile::icinga2::nrpe
+  #include profile::icinga2::nrpe
   
   #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
+  #include profile::icinga2::nrpe::objects
 
   ###############################
   # BIND installation/setup
   ###############################
-
-  #BIND module is from: https://github.com/thias/puppet-bind
-  #Just install the BIND package:
-  include bind::package
+  
+  #Include the BIND base profile so that we get the host export
+  #for monitoring set up:
+  include profile::bind  
+  #include profile::bind::master
 
 }
 
-node 'dnsslave2.local' {
+node 'dnsreplica2.local' {
 
   ###############################
   # SSH installation/setup
@@ -269,7 +269,7 @@ node 'dnsslave2.local' {
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
@@ -290,45 +290,46 @@ node 'dnsslave2.local' {
   ###############################
 
   #Make this machine a Consul client:
-  include profile::consul::client
+  #include profile::consul::client
 
   ###############################
   # collectd installation/setup
   ###############################
 
   #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
+  #include profile::collectd
   
   #Gather NTP stats:
-  include profile::collectd::system_metrics
+  #include profile::collectd::system_metrics
   
   #Gather network metrics
-  include profile::collectd::network_metrics
+  #include profile::collectd::network_metrics
   
   #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
+  #include profile::collectd::write_graphite
 
   ###############################
   # NRPE installation/configuration
   ###############################
 
   #Install and configure NRPE
-  include profile::icinga2::nrpe
+  #include profile::icinga2::nrpe
   
   #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
+  #include profile::icinga2::nrpe::objects
 
   ###############################
   # BIND installation/setup
   ###############################
-
-  #BIND module is from: https://github.com/thias/puppet-bind
-  #Just install the BIND package:
-  include bind::package
+  
+  #Include the BIND base profile so that we get the host export
+  #for monitoring set up:
+  include profile::bind  
+  #include profile::bind::master
 
 }
 
-node 'dnsclient1.local' {
+node 'dnssubserver1.local' {
 
   ###############################
   # SSH installation/setup
@@ -342,7 +343,7 @@ node 'dnsclient1.local' {
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
@@ -363,43 +364,46 @@ node 'dnsclient1.local' {
   ###############################
 
   #Make this machine a Consul client:
-  include profile::consul::client
+  #include profile::consul::client
 
   ###############################
   # collectd installation/setup
   ###############################
 
   #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
+  #include profile::collectd
   
   #Gather NTP stats:
-  include profile::collectd::system_metrics
+  #include profile::collectd::system_metrics
   
   #Gather network metrics
-  include profile::collectd::network_metrics
+  #include profile::collectd::network_metrics
   
   #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
-
-  ###############################
-  # Icinga 2 host export stuff
-  ###############################
-
-  include profile::icinga2::hostexport
+  #include profile::collectd::write_graphite
 
   ###############################
   # NRPE installation/configuration
   ###############################
 
   #Install and configure NRPE
-  include profile::icinga2::nrpe
+  #include profile::icinga2::nrpe
   
   #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
+  #include profile::icinga2::nrpe::objects
+
+  ###############################
+  # BIND installation/setup
+  ###############################
+  
+  #Include the BIND base profile so that we get the host export
+  #for monitoring set up:
+  include profile::bind  
+  #include profile::bind::master
 
 }
 
-node 'dnsclient2.local' {
+node 'dnssubserver2.local' {
 
   ###############################
   # SSH installation/setup
@@ -413,7 +417,7 @@ node 'dnsclient2.local' {
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
@@ -434,39 +438,42 @@ node 'dnsclient2.local' {
   ###############################
 
   #Make this machine a Consul client:
-  include profile::consul::client
+  #include profile::consul::client
 
   ###############################
   # collectd installation/setup
   ###############################
 
   #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
+  #include profile::collectd
   
   #Gather NTP stats:
-  include profile::collectd::system_metrics
+  #include profile::collectd::system_metrics
   
   #Gather network metrics
-  include profile::collectd::network_metrics
+  #include profile::collectd::network_metrics
   
   #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
-
-  ###############################
-  # Icinga 2 host export stuff
-  ###############################
-
-  include profile::icinga2::hostexport
+  #include profile::collectd::write_graphite
 
   ###############################
   # NRPE installation/configuration
   ###############################
 
   #Install and configure NRPE
-  include profile::icinga2::nrpe
+  #include profile::icinga2::nrpe
   
   #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
+  #include profile::icinga2::nrpe::objects
+
+  ###############################
+  # BIND installation/setup
+  ###############################
+  
+  #Include the BIND base profile so that we get the host export
+  #for monitoring set up:
+  include profile::bind  
+  #include profile::bind::master
 
 }
 
@@ -480,133 +487,11 @@ node 'dnsmonitoring.local' {
   include profile::ssh
 
   ###############################
-  # Postfix installation/setup
-  ###############################
-
-   #Include a profile that installs and configures Postfix:
-  include profile::postfix::server
-
-  #Include the profile that sets up my user account:
-  include profile::users
-
-  ###############################
-  # Apache installation/setup
-  ###############################
-
-  #Install Apache so we can run Kibana and Grafana:
-  include profile::apache
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
-
-  ###############################
-  # Consul installation/setup
-  ###############################
-
-  #Make this machine a Consul client:
-  include profile::consul::client
-
-  ###############################
-  # Riemann installation/setup
-  ###############################
-
-  #Install Java so we can run Riemann; use the -> arrow so that it gets instaleld:
-  package {'openjdk-7-jdk':
-    ensure => installed,
-  }
-
-  #Install Riemann
-  include profile::riemann
-
-  ###############################
-  # InfluxDB installation/setup
-  ###############################
-
-  #Install InfluxDB
-  include profile::influxdb
-
-  ###############################
-  # Grafana installation/setup
-  ###############################
-
-  #Include the Grafana profile
-  include profile::grafana
-
-  ###############################
-  # Logstash installation/setup
-  ###############################
-
-  #Install Logstash...
-  include profile::logstash
-  #...and configure it:
-  include profile::logstash::config
-
-  ###############################
-  # Elasticsearch installation/setup
-  ###############################
-
-  #Include Elasticsearch
-  include profile::elasticsearch
-
-  ###############################
-  # Kibana installation/setup
-  ###############################
-
-  #Include the profile that sets up a virtual host for Kibana3:
-  include profile::kibana3::apache_virtualhost
-
-  ###############################
-  # NTP installation/setup
-  ###############################
-
-  #Include a profile that sets up NTP
-  include profile::ntp::client
-
-  ###############################
-  # Icinga 2 installation/setup
-  ###############################
-  
-  #Install Icinga 2, set up a database for it
-  #and collectd
-  include role::icinga2::server 
-
-  ###############################
-  # collectd installation/setup
-  ###############################
-
-  #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
-  
-  #Gather NTP stats:
-  include profile::collectd::system_metrics
-  
-  #Gather network metrics
-  include profile::collectd::network_metrics
-  
-  #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
-
-}
-
-node 'dnsmailrelay.local' {
-
-  ###############################
-  # SSH installation/setup
-  ###############################
-
-  #Include a profile that sets up our usual SSH settings:
-  include profile::ssh
-
-  ###############################
   # rsyslog installation/setup
   ###############################
 
   #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
+  #include profile::rsyslog::client
 
   ###############################
   # NTP installation/setup
@@ -614,142 +499,5 @@ node 'dnsmailrelay.local' {
 
   #Include a profile that sets up NTP
   include profile::ntp::client
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
-
-  ###############################
-  # Consul installation/setup
-  ###############################
-
-  #Make this machine a Consul client:
-  include profile::consul::client
-
-  ###############################
-  # collectd installation/setup
-  ###############################
-
-  #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
-  
-  #Gather NTP stats:
-  include profile::collectd::system_metrics
-  
-  #Gather network metrics
-  include profile::collectd::network_metrics
-  
-  #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
-
-  ###############################
-  # Icinga 2 host export stuff
-  ###############################
-
-  include profile::icinga2::hostexport
-
-  ###############################
-  # NRPE installation/configuration
-  ###############################
-
-  #Install and configure NRPE
-  include profile::icinga2::nrpe
-  
-  #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
-
-  ###############################
-  # Postfix installation/setup
-  ###############################
-
-   #Include a profile that installs and configures Postfix:
-  include profile::postfix::server
-
-  #Include the profile that sets up my user account:
-  include profile::users
-
-}
-
-node 'dnsusermail.local' {
-
-  ###############################
-  # SSH installation/setup
-  ###############################
-
-  #Include a profile that sets up our usual SSH settings:
-  include profile::ssh
-
-  ###############################
-  # rsyslog installation/setup
-  ###############################
-
-  #Include the rsyslog::client profile to set up logging
-  include profile::rsyslog::client
-
-  ###############################
-  # NTP installation/setup
-  ###############################
-
-  #Include a profile that sets up NTP
-  include profile::ntp::client
-
-  ###############################
-  # Heka installation/setup
-  ###############################
-
-  #Install Heka and configure it with some plugins:
-  include profile::heka
-
-  ###############################
-  # Consul installation/setup
-  ###############################
-
-  #Make this machine a Consul client:
-  include profile::consul::client
-
-  ###############################
-  # collectd installation/setup
-  ###############################
-
-  #Install Collectd so we can get metrics from this machine into Riemann/InfluxDB:
-  include profile::collectd
-  
-  #Gather NTP stats:
-  include profile::collectd::system_metrics
-  
-  #Gather network metrics
-  include profile::collectd::network_metrics
-  
-  #Send collectd metrics to the monitoring VM
-  include profile::collectd::write_graphite
-
-  ###############################
-  # Icinga 2 host export stuff
-  ###############################
-
-  include profile::icinga2::hostexport
-
-  ###############################
-  # NRPE installation/configuration
-  ###############################
-
-  #Install and configure NRPE
-  include profile::icinga2::nrpe
-  
-  #Include NRPE command definitions
-  include profile::icinga2::nrpe::objects
-
-  ###############################
-  # Postfix installation/setup
-  ###############################
-
-   #Include a profile that installs and configures Postfix:
-  include profile::postfix::server
-
-  #Include the profile that sets up my user account:
-  include profile::users
 
 }

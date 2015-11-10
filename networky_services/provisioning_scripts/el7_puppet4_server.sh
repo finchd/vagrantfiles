@@ -133,7 +133,7 @@ sudo cat > /etc/puppetlabs/code/hiera.yaml <<"EOF"
 - yaml
 #For the YAML backend, specify the location of YAML data
 :yaml:
-:datadir: '/etc/puppetlabs/code/environments/%{::environment}/hieradata'
+  :datadir: "/etc/puppetlabs/code/environments/%{environment}/hieradata/yaml" 
 EOF
 
 #Enable autosigning:
